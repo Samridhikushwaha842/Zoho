@@ -1,13 +1,37 @@
 client_id:1000.9GUC3HDLC8P3WOQVN58KHHG1BR8YMR
 client_secret:44860934c910a9274887f8af7582338b537f8cc62f
 scope:ZohoCRM.org.CREATE
-redirect_uri:https://github.com/
+redirect_uri:https://www.google.com/
 
 
-https://accounts.zoho.in/oauth/v2/auth?response_type=code&client_id=1000.9GUC3HDLC8P3WOQVN58KHHG1BR8YMR&scope=ZohoCRM.org.CREATE&redirect_uri=https%3A%2F%2Fgithub.com%2F&access_type=offline
+https://accounts.zoho.in/oauth/v2/auth?response_type=code&client_id=1000.9GUC3HDLC8P3WOQVN58KHHG1BR8YMR&scope=ZohoCRM.org.CREATE&redirect_uri=https://www.google.com/&access_type=offline
 
-https://github.com/?code=1000.0778ba384a47788dcf5a8def2d528f33.913d285e0538ecde7d77af4344bac2e6&location=in&accounts-server=https%3A%2F%2Faccounts.zoho.in&
+https://www.google.com/?code=1000.e2866b699207d5ac38d615dee8c6c9e0.3650498d47f83d232ca83d263839bf44&location=in&accounts-server=https%3A%2F%2Faccounts.zoho.in&
 
 
-https://accounts.zoho.com/oauth/v2/token?grant_type=authorization_code&code=1000.0778ba384a47788dcf5a8def2d528f33.913d285e0538ecde7d77af4344bac2e6&client_id=1000.9GUC3HDLC8P3WOQVN58KHHG1BR8YMR&redirect_uri=https://github.com/&client_secret=44860934c910a9274887f8af7582338b537f8cc62f"
+https://accounts.zoho.com /oauth/v2/token?grant_type=authorization_code&client_id=1000.9GUC3HDLC8P3WOQVN58KHHG1BR8YMR&client_secret=44860934c910a9274887f8af7582338b537f8cc62f&redirect_uri=https://www.google.com/&code=1000.e2866b699207d5ac38d615dee8c6c9e0.3650498d47f83d232ca83d263839bf44
 
+
+
+https://accounts.zoho.com/oauth/v2/token?grant_type=authorization_code&code=1000.e2866b699207d5ac38d615dee8c6c9e0.3650498d47f83d232ca83d263839bf44&client_id=1000.9GUC3HDLC8P3WOQVN58KHHG1BR8YMR&redirect_uri=https://www.google.com/&client_secret=44860934c910a9274887f8af7582338b537f8cc62f"
+
+
+//refresh token
+https://accounts.zoho.com/oauth/v2/token?refresh_token=09406f6ff4f1533fe9504d52d77756175b9e14b628&client_id=1000.9GUC3HDLC8P3WOQVN58KHHG1BR8YMR&client_secret=44860934c910a9274887f8af7582338b537f8cc62f&grant_type=refresh_token
+
+
+
+
+// // src/components/SignupForm.js
+// import React from 'react';
+
+// const SignupForm = () => {
+//   return (
+//     <div>
+//       <h2>Sign Up Form</h2>
+//       {/* Your form elements here */}
+//     </div>
+//   );
+// };
+
+// export default SignupForm;

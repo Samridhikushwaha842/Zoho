@@ -6,14 +6,10 @@ import reportWebVitals from './reportWebVitals';
 // import SignupForm from './Signup';
 // import SignupForm from './components/SignupForm.js';
 
-
-const root = ReactDOM.createRoot(document.getElementById('root'));
-root.render(
-  <React.StrictMode>
-    {/* <SignupForm/> */}
-    <App/>
-  </React.StrictMode>
-);
+// Change this:
+import { createRoot } from 'react-dom/client';
+const root = createRoot(document.getElementById('root'));
+root.render(<App />);
 
 // If you want to start measuring performance in your app, pass a function
 // to log results (for example: reportWebVitals(console.log))

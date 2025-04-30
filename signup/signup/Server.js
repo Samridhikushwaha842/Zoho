@@ -1,60 +1,107 @@
+require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
-const dotenv = require('dotenv');
-const zohoMeeting = require('./Zoho'); // Updated import
-// const zohoMeeting = require('./zohoMeeting');
-
-dotenv.config();
-
+const bodyParser = require('body-parser');
 const app = express();
 
-app.use(cors());
-app.use(express.json());
+// Middleware
+app.use(cors({
+  origin: 'http://localhost:3000',
+  credentials: true
+}));
+app.use(bodyParser.json());
 
-app.get('/api/user', (req, res) => {
-  res.send('🟢 Server is running.');
+// Health check endpoint
+app.get('/', (req, res) => {
+  res.status(200).json({
+    status: 'Server is running',
+    endpoints: {
+      signup: 'POST /api/signup',
+      users: 'GET /api/users'
+    }
+  });
+});
+
+let users = [];
+let meetings = [];
+
+const generateMeetingDetails = (email) => {
+  const meetingId = `zoho-${Math.random().toString(36).substring(2, 15)}`;
+  const meetingKey = Math.random().toString(36).substring(2, 10);
+  const meetingUrl = `https://meetings.zoho.com/meeting/${meetingId}/${meetingKey}`;
+  
+  const meeting = {
+    id: meetingId,
+    key: meetingKey,
+    email,
+    meeting_url: meetingUrl,
+    created_at: new Date().toISOString()
+  };
+  
+  meetings.push(meeting);
+  return meeting;
+};
+
+app.get('/api/users', (req, res) => {
+  res.status(200).json({
+    users: users.map(user => ({
+      name: user.name,
+      email: user.email,
+      createdAt: user.createdAt
+    })),
+    count: users.length
+  });
 });
 
 app.post('/api/signup', async (req, res) => {
-  console.log('Request Body:', JSON.stringify(req.body, null, 2)); // Add this line
-  
   try {
-    if (!req.body) {
-      return res.status(400).json({ error: 'Request body is missing' });
-    }
-
     const { name, email, password } = req.body;
-    
+
     if (!name || !email || !password) {
-      return res.status(400).json({ 
-        error: 'Missing fields',
-        received: { name, email, password }
-      });
+      return res.status(400).json({ error: 'All fields are required' });
     }
 
-    console.log('Creating meeting for:', name); // Add this line
-    const meetingData = await zohoMeeting.createMeeting(name);
-    
-    res.status(200).json({
-      message: 'Signup successful',
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+      return res.status(400).json({ error: 'Invalid email format' });
+    }
+
+    const userExists = users.some(user => user.email === email);
+    if (userExists) {
+      return res.status(409).json({ error: 'Email already registered' });
+    }
+
+    const newUser = {
+      name,
+      email,
+      password,
+      createdAt: new Date().toISOString()
+    };
+
+    users.push(newUser);
+    const meetingDetails = generateMeetingDetails(email);
+
+    res.status(201).json({
+      message: 'Registration successful!',
       meeting: {
-        id: meetingData.meeting_key,
-        url: meetingData.web_url,
-        topic: meetingData.topic
+        meeting_id: meetingDetails.id,
+        meeting_key: meetingDetails.key,
+        meeting_url: meetingDetails.meeting_url
       }
     });
+
   } catch (error) {
-    console.error('Full error:', error);
-    res.status(500).json({ 
-      error: 'Meeting creation failed',
-      details: {
-        message: error.message,
-        stack: process.env.NODE_ENV === 'development' ? error.stack : undefined
-      }
-    });
+    console.error('Signup error:', error);
+    res.status(500).json({ error: 'Internal server error' });
   }
 });
+
+app.use((err, req, res, next) => {
+  console.error(err.stack);
+  res.status(500).json({ error: 'Something went wrong!' });
+});
+
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
-  console.log(`🚀 Server running at http://localhost:${PORT}`);
+  console.log(`Server running on http://localhost:${PORT}`);
 });
